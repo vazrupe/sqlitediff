@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	d, err := sqlitediff.Diff("master_be.mdb", "master_af.mdb")
+	d, err := sqlitediff.Diff("YOUR_BEFORE_DB", "YOUR_BEFORE_DB")
 	if err != nil {
 		panic(err)
 	}
