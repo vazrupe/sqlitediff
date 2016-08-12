@@ -30,24 +30,28 @@ type DiffTable struct {
 	RemoveRows []int64
 }
 
+var binded = false
+
 // Diff returns Diff datas
 func Diff(before, after string) (*DiffDatabase, error) {
-	sql.Register("sqlite3_custom", &sqlite.SQLiteDriver{
-		ConnectHook: func(conn *sqlite.SQLiteConn) error {
-			if err := conn.RegisterFunc("md5", hash1, true); err != nil {
-				return err
-			}
-			return nil
-		},
-	})
+	if !binded {
+		sql.Register("sqlite3_hash", &sqlite.SQLiteDriver{
+			ConnectHook: func(conn *sqlite.SQLiteConn) error {
+				if err := conn.RegisterFunc("md5", hash1, true); err != nil {
+					return err
+				}
+				return nil
+			},
+		})
+	}
 
 	var diffDb = &DiffDatabase{}
 
-	beforeDb, err := sql.Open("sqlite3_custom", before)
+	beforeDb, err := sql.Open("sqlite3_hash", before)
 	if err != nil {
 		return nil, err
 	}
-	afterDb, err := sql.Open("sqlite3_custom", after)
+	afterDb, err := sql.Open("sqlite3_hash", after)
 	if err != nil {
 		return nil, err
 	}
