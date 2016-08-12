@@ -43,6 +43,7 @@ func Diff(before, after string) (*DiffDatabase, error) {
 				return nil
 			},
 		})
+		binded = true
 	}
 
 	var diffDb = &DiffDatabase{}
